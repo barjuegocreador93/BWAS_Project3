@@ -264,7 +264,23 @@ routes['/comments'] = {
   }
 };
 
+routes['/comments/:id']={
+  'PUT':(url,req)=>{
+    const id = Number(url.split('/').filter(segment => segment)[1]);
+    const comment = database.body.comment;
 
+    if(!database.comments[id])return {status:404};
+    if(!comment)return {status=400};
+    database.comments[id].body = comment;
+    return {status:200,body:comment};
+  },
+  'DELETE':(url,req)=>{
+    const id = Number(url.split('/').filter(segment => segment)[1]);   
+    if(!database.comments[id])return {status:404};
+    database.comments.pop(id);
+    return {status:204};
+  }
+}
 
 const http = require('http');
 const url = require('url');
