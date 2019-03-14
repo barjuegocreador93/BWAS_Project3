@@ -1,0 +1,7 @@
+users:
+    cab: {username: cab, articleIds: [], commentIds: []}
+articles:
+    '1': null
+nextArticleId: 2
+comments: {}
+nextCommentId: 0

@@ -270,7 +270,7 @@ routes['/comments/:id']={
     const comment = req.body.comment;
 
     if(!database.comments[id])return {status:404};
-    if(!comment)return {status=400};
+    if(!comment)return {status:400};
     database.comments[id].body = comment;
     return {status:200,body:comment};
   },
@@ -282,7 +282,43 @@ routes['/comments/:id']={
   }
 };
 
+routes['/comments/:id/upvote']={
+  'PUT':(url,req)=>{
+    const id = Number(url.split('/').filter(segment => segment)[1]);
 
+    if(!database.comments[id])return {status:400};
+    
+    database.comments[id].upvotedBy++;
+    return {status:200};
+  }
+};
+
+routes['/comments/:id/downvote']={
+  'PUT':(url,req)=>{
+    const id = Number(url.split('/').filter(segment => segment)[1]);
+
+    if(!database.comments[id])return {status:400};
+    
+    database.comments[id].downvotedBy--;
+    return {status:200};
+  }
+};
+
+const YAML = require('yamljs');
+const fs = require('fs');
+
+function loadDatabase(){
+  const data = YAML.load('database.yml');
+  if(data){    
+    database = data;
+  }
+}
+
+function saveDatabase(){
+  const data = YAML.stringify(database);
+  fs.writeFile('database.yml',data);
+  
+}
 
 const http = require('http');
 const url = require('url');
