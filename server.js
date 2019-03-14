@@ -241,6 +241,30 @@ function downvote(item, username) {
 }
 
 // Write all code above this line.
+database.comments = {};
+database.nextCommentId = 0;
+
+routes['/comments'] = {
+  'POST':(url,req)=>{
+    const user = req.body.username;
+    const article = req.body.articleId;
+    if(database.users[user] && database.articles[article]){
+      let comment ={
+        id:database.nextCommentId++,
+        body:req.body.comment,
+        articleId:article,
+        username:user,
+        upvotedBy:0,
+        downvotedBy:0
+      }
+      database.comments[comment.id] = comment;
+      return {status:201,body:comment};
+    }
+    return {status:400};
+  }
+};
+
+
 
 const http = require('http');
 const url = require('url');
